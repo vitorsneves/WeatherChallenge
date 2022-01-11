@@ -1,0 +1,59 @@
+namespace Services.SevicesInterfaces
+{
+    public class OpenWeatherService
+    {
+        private readonly IHttpClienteFactory _clientFactory;
+        private readonly IConfiguration _configuration;
+        private string _ApiUrl;
+        private string _ApiKey;
+
+        public OpenWeatherService(IHttpClienteFactory clientFactory, IConfiguration configuration)
+        {
+            _clientFactory = clientFactory;
+            _configuration = configuration;
+            _ApiUrl = _configuration["ApiOpenWeather:ApiUrl"];
+            _ApiKey = _configuration["ApiOpenWeather:ApiKey"];
+        }
+
+        public DTOOpenWeatherResult GetCurrentTemperature(double latitude, double longitude)
+        {
+
+            Dictionary<string, string> urlParameters = new Dictionary<string, string>()
+            {
+                {"lat", latitude.ToString()},
+                {"lon", longitude.ToString()},
+                {"appid", _ApiKey}
+            };
+
+            HttpResponseMessage response = SendRequest("/weather", urlParameters);
+            return HandleCurrentTemperatureResponse(response);
+        }
+
+        public DTOOpenWeatherResult GetCurrentTemperature(string city)
+        {
+            Dictionary<string, string> urlParameters = new Dictionary<string, string>()
+            {
+                {"q", city},
+                {"appid", _ApiKey}
+            };
+
+            HttpResponseMessage response = SendRequest("/weather", urlParameters);
+            return HandleCurrentTemperatureResponse(response);
+        }
+
+        private HttpResponseMessage SendRequest(string urlPath, Dictionary<string, string> urlParameters)
+        {
+            string openWeatherEndpoint = _ApiUrl + urlPath;
+            HttpClient client = _clientFactory.CreateClient();
+
+            return client.get(HttpClient.AddQueryString(ultParameters, urlParameters));
+        }
+
+        private DTOOpenWeatherResult HandleCurrentTemperatureResponse(HttpResponseMessage response)
+        {
+            return JsonConvert.DeserializeObject<DTOOpenWeatherResult>(
+                response.content.ReadAsString()
+            );
+        }
+    }
+}
