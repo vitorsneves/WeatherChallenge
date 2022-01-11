@@ -1,3 +1,6 @@
+using Domain.DTO;
+using Newtonsoft.Json;
+
 namespace Services.SevicesInterfaces
 {
     public class OpenWeatherService
@@ -29,7 +32,7 @@ namespace Services.SevicesInterfaces
             return HandleCurrentTemperatureResponse(response);
         }
 
-        public DTOOpenWeatherResult GetCurrentTemperature(string city)
+        public DTOOpenWeatherReport GetCurrentTemperature(string city)
         {
             Dictionary<string, string> urlParameters = new Dictionary<string, string>()
             {
@@ -46,13 +49,13 @@ namespace Services.SevicesInterfaces
             string openWeatherEndpoint = _ApiUrl + urlPath;
             HttpClient client = _clientFactory.CreateClient();
 
-            return client.get(HttpClient.AddQueryString(ultParameters, urlParameters));
+            return client.GetAsync(QueryHelpers.AddQueryString(ultParameters, urlParameters));
         }
 
-        private DTOOpenWeatherResult HandleCurrentTemperatureResponse(HttpResponseMessage response)
+        private DTOOpenWeatherReport HandleCurrentTemperatureResponse(HttpResponseMessage response)
         {
-            return JsonConvert.DeserializeObject<DTOOpenWeatherResult>(
-                response.content.ReadAsString()
+            return JsonConvert.DeserializeObject<DTOOpenWeatherReport>(
+                response.Content.ToString()
             );
         }
     }

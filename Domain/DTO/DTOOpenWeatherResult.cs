@@ -1,10 +1,12 @@
+using Newtonsoft.Json;
+
 namespace Domain.DTO
 {
     [Serializable]
     public class DTOOpenWeatherReport
     {
         [JsonProperty("main")]
-        public ReportMainSection Main { get; set; }
+        public ReportMainSection? Main { get; set; }
 
         public bool IsValid() 
         {

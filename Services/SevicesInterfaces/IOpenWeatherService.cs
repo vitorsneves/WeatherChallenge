@@ -1,10 +1,12 @@
+using Domain.DTO;
+
 namespace Services.SevicesInterfaces
 {
     public interface IOpenWeatherService
     {
-        public DTOOpenWeatherResult GetCurrentTemperature(double latitude, double longitude);
-        public DTOOpenWeatherResult GetCurrentTemperature(string city);
-        public DTOOpenWeatherResult GetTemperatureHistory(double latitude, double longitude);
-        public DTOOpenWeatherResult GetTemperatureHistory(string city);
+        public DTOOpenWeatherReport GetCurrentTemperature(double latitude, double longitude);
+        public DTOOpenWeatherReport GetCurrentTemperature(string city);
+        public DTOOpenWeatherReport GetTemperatureHistory(double latitude, double longitude);
+        public DTOOpenWeatherReport GetTemperatureHistory(string city);
     }
 }
